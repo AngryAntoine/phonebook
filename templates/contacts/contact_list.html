@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head_title %}{{ head_title }} | {{ block.super}}{% endblock %}
+
+{% block content %}
+    <br>
+    <table class="table table-hover">
+        {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=name{% if order_by == 'name' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Имя {% if order_by == 'name' and request.GET.reverse != '1' %}<i class="fas fa-sort-alpha-down"></i>
+                           {% elif order_by == 'name' and request.GET.reverse == '1' %}<i class="fas fa-sort-alpha-up"></i>
+                           {% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=surname{% if order_by == 'surname' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Фамилия {% if order_by == 'surname' and request.GET.reverse != '1' %}<i class="fas fa-sort-alpha-down"></i>
+                           {% elif order_by == 'surname' and request.GET.reverse == '1' %}<i class="fas fa-sort-alpha-up"></i>
+                           {% endif %}
+                    </a></th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=phone_number_1{% if order_by == 'phone_number_1' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Телефон 1 {% if order_by == 'phone_number_1' and request.GET.reverse != '1' %}<i class="fas fa-sort-numeric-down"></i>
+                           {% elif order_by == 'phone_number_1' and request.GET.reverse == '1' %}<i class="fas fa-sort-numeric-up"></i>
+                           {% endif %}
+                    </a></th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=phone_number_2{% if order_by == 'phone_number_2' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Телефон 2 {% if order_by == 'phone_number_2' and request.GET.reverse != '1' %}<i class="fas fa-sort-numeric-down"></i>
+                           {% elif order_by == 'phone_number_2' and request.GET.reverse == '1' %}<i class="fas fa-sort-numeric-up"></i>
+                           {% endif %}
+                    </a></th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=region{% if order_by == 'region' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Область {% if order_by == 'region' and request.GET.reverse != '1' %}<i class="fas fa-sort-alpha-down"></i>
+                           {% elif order_by == 'region' and request.GET.reverse == '1'  %}<i class="fas fa-sort-alpha-up"></i>
+                           {% endif %}
+                    </a></th>
+                <th>
+                    <a href="{% url 'contacts:contact_list' %}?order_by=email{% if order_by == 'email' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                        Почта {% if order_by == 'email' and request.GET.reverse != '1' %}<i class="fas fa-sort-alpha-down"></i>
+                           {% elif order_by == 'email' and request.GET.reverse == '1' %}<i class="fas fa-sort-alpha-up"></i>
+                           {% endif %}
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        {% endwith %}
+        <tbody>
+        {% for contact in contact_list %}
+            <tr>
+                <td>{{ forloop.counter}}</td>
+                <td>
+                    <span class="pull-left">
+                        <a href="{{ contact.get_absolute_url }}">{{ contact.name }}</a>
+                    </span>
+                </td>
+                <td>
+                    <span class="pull-left">
+                        <a href="{{ contact.get_absolute_url }}">{{ contact.surname }}</a>
+                    </span>
+                </td>
+                <td>
+                    <span class="pull-left">
+                        {% if contact.phone_number_1 %}{{ contact.phone_number_1 }}{% else %}не указано{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <span class="pull-left">
+                        {% if contact.phone_number_2 %}{{ contact.phone_number_2 }}{% else %}не указано{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <span class="pull-left">{{ contact.region }}</span>
+                </td>
+                <td>
+                    <span class="pull-left">{{ contact.email }}</span>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">
+                    <span class="center">No contacts here yet</span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+      {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+        <nav style="vertical-align: bottom;">
+          <ul class="pager">
+              {% if page_obj.has_previous %}
+                <li {% if not page_obj.has_previous %}class="disabled"{% endif %}><a href="{% url 'contacts:contact_list' %}?page={{ page_obj.previous_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">Previous</a></li>
+              {% endif %}
+{#              <span class="page-current">#}
+{#                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#              </span>#}
+              {% if page_obj.has_next %}
+                <li {% if not page_obj.has_next %}class="disabled"{% endif %}><a href="{% url 'contacts:contact_list' %}?page={{ page_obj.next_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">Next</a></li>
+              {% endif %}
+          </ul>
+        </nav>
+      {% endwith %}
+    {% endif %}
+{% endblock content %}

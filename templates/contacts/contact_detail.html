@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block head_title %}{{ contact.surname }} | {{ block.super}}{% endblock %}
+
+{% block content %}
+    <div class="col-sm-6 col-sm-offset-3">
+    <h1>ФИО: {{contact.name}} {{ contact.surname }}</h1>
+    <p>Телефон 1:{% if contact.phone_number_1 %} {{ contact.phone_number_1 }}{% else %} не указано{% endif %}</p>
+    <p>Телефон 2:{% if contact.phone_number_2 %} {{ contact.phone_number_2 }}{% else %} не указано{% endif %}</p>
+    <p>Email: {{ contact.email }}</p>
+    <p>Регион: {{ contact.region }}</p>
+    <a href="{% url 'contacts:contact_update' contact.slug contact.pk %}">Редактировать</a>
+    <a href="{% url 'contacts:contact_delete' contact.slug contact.pk %}">Удалить</a>
+    <br>
+    <br>
+    <h3>Совместные номера</h3>
+    {% for related_contact_1 in common_numbers_level_1 %}
+        <p><a href="{{ related_contact_1.get_absolute_url }}">{{ related_contact_1 }}</a></p>
+    {% empty %}
+        <p>Совместных номеров нет</p>
+    {% endfor %}
+    {% for related_contact_2 in common_numbers_level_2 %}
+        {% for contact in related_contact_2 %}
+            <p><a href="{{ contact.get_absolute_url }}">{{ contact }}</a></p>
+        {% endfor %}
+    {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,16 @@
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {% if form %}
+        {{ form.as_p }}
+    <br>
+    <button class="btn btn-success" type="submit" value="Сохранить">Сохранить</button>
+    {% endif %}
+    {% if head_title == 'Удалить контакт' %}
+        <p>Вы точно хотите удалить "{{ object }}"?</p>
+        <input class="btn btn-warning" type="submit" value="Подтвердить" />
+    {% endif %}
+
+    <a href="javascript:history.back();">
+        <button type="button" class="btn btn-default">Назад</button>
+    </a>
+</form>

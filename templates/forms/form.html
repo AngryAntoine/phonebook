@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block head_title %}{{ head_title }} | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <div class="col-sm-6 col-sm-offset-3">
+        {% include 'forms/single_form.html' with form=form %}
+    </div>
+{% endblock %}
